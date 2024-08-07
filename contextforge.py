@@ -58,13 +58,34 @@ def get_file_content(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         return file.read()
 
-def is_binary(file_path):
+# def is_binary(file_path):
+#     """Check if a file is binary."""
+#     try:
+#         with open(file_path, 'tr') as check_file:
+#             check_file.read()
+#             return False
+#     except:
+#         return True
+
+# window용으로 수정
+def is_binary(file_path):      
     """Check if a file is binary."""
+    # Convert to Path object if it's not already
+    path = Path(file_path)
+    
+    # Check the file extension
+    if path.suffix.lower() in ('.py', '.ipynb'):
+        return False
+    
     try:
-        with open(file_path, 'tr') as check_file:
+        # Use the path object to open the file
+        with path.open('r') as check_file:
             check_file.read()
             return False
-    except:
+    except UnicodeDecodeError:
+        return True
+    except Exception as e:
+        print(f"An error occurred while checking {path}: {e}")
         return True
 
 def get_language(file_extension):
